@@ -12,9 +12,9 @@ from datasets.TripletLossDataset import TripletFaceDataset
 from validate_on_LFW import evaluate_lfw
 from plot import plot_roc_lfw, plot_accuracy_lfw
 from tqdm import tqdm
-from models.inceptionresnetv2 import InceptionResnetV2Triplet
-from models.mobilenetv2 import MobileNetV2Triplet
-from models.resnet import (
+from model.inceptionresnetv2 import InceptionResnetV2Triplet
+from model.mobilenetv2 import MobileNetV2Triplet
+from model.resnet import (
     Resnet18Triplet,
     Resnet34Triplet,
     Resnet50Triplet,
