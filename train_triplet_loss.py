@@ -313,7 +313,7 @@ def main():
     #   dataset with tightly-cropped faces dataset RGB channels' mean and std values by
     #   calculate_glint360k_rgb_mean_std.py in 'datasets' folder.
     data_transforms = transforms.Compose([
-        transforms.Resize(size=image_size),
+        transforms.Resize(size=(image_size, image_size)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(degrees=5),
         transforms.ToTensor(),
@@ -324,7 +324,7 @@ def main():
     ])
 
     lfw_transforms = transforms.Compose([
-        transforms.Resize(size=image_size),
+        transforms.Resize(size=(image_size, image_size)),
         transforms.ToTensor(),
         transforms.Normalize(
             mean=[0.6071, 0.4609, 0.3944],
