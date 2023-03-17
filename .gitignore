@@ -3,3 +3,8 @@
 __pycache__
 model/model_resnet34_triplet.pt
 data
+plots/accuracies_plots/*.png
+plots/roc_plots/*.png
+model_training_checkpoints/*.pt
+logs/*.txt
+datasets/generated_triplets/*.npy
