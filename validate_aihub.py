@@ -6,14 +6,14 @@ from validate_on_LFW import evaluate_lfw
 from plot import plot_roc_lfw, plot_accuracy_lfw
 
 
-def validate_lfw(model, lfw_dataloader, model_architecture, epoch):
+def validate_aihub(model, aihub_dataloader, model_architecture, epoch):
     model.eval()
     with torch.no_grad():
         l2_distance = PairwiseDistance(p=2)
         distances, labels = [], []
 
-        print("Validating on LFW! ...")
-        progress_bar = enumerate(tqdm(lfw_dataloader))
+        print("Validating on AIHUB! ...")
+        progress_bar = enumerate(tqdm(aihub_dataloader))
 
         for batch_index, (data_a, data_b, label) in progress_bar:
             data_a = data_a.cuda()
@@ -35,7 +35,7 @@ def validate_lfw(model, lfw_dataloader, model_architecture, epoch):
             far_target=1e-3
         )
         # Print statistics and add to log
-        print("Accuracy on LFW: {:.4f}+-{:.4f}\tPrecision {:.4f}+-{:.4f}\tRecall {:.4f}+-{:.4f}\t"
+        print("Accuracy on AIHUB: {:.4f}+-{:.4f}\tPrecision {:.4f}+-{:.4f}\tRecall {:.4f}+-{:.4f}\t"
               "ROC Area Under Curve: {:.4f}\tBest distance threshold: {:.2f}+-{:.2f}\t"
               "TAR: {:.4f}+-{:.4f} @ FAR: {:.4f}".format(
                     np.mean(accuracy),
@@ -52,7 +52,7 @@ def validate_lfw(model, lfw_dataloader, model_architecture, epoch):
                     np.mean(far)
                 )
         )
-        with open('logs/lfw_{}_log_triplet.txt'.format(model_architecture), 'a') as f:
+        with open('logs/aihub_{}_log_triplet.txt'.format(model_architecture), 'a') as f:
             val_list = [
                 epoch,
                 np.mean(accuracy),
@@ -76,11 +76,11 @@ def validate_lfw(model, lfw_dataloader, model_architecture, epoch):
             true_positive_rate=true_positive_rate,
             figure_name="plots/roc_plots/roc_{}_epoch_{}_triplet.png".format(model_architecture, epoch)
         )
-        # Plot LFW accuracies plot
+        # Plot AIHUB accuracies plot
         plot_accuracy_lfw(
-            log_file="logs/lfw_{}_log_triplet.txt".format(model_architecture),
+            log_file="logs/aihub_{}_log_triplet.txt".format(model_architecture),
             epochs=epoch,
-            figure_name="plots/accuracies_plots/lfw_accuracies_{}_epoch_{}_triplet.png".format(model_architecture, epoch)
+            figure_name="plots/accuracies_plots/aihub_accuracies_{}_epoch_{}_triplet.png".format(model_architecture, epoch)
         )
     except Exception as e:
         print(e)

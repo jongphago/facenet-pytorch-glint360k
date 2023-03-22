@@ -31,19 +31,23 @@ SOFTWARE."""
 import torchvision.datasets as datasets
 import os
 import numpy as np
+from fpt.path import DTFR
+from fpt.data import join_face_df
 
+DATA_CATEGORY = "aihub_family"
+face_df = join_face_df(DTFR, DATA_CATEGORY)
 
-class LFWDataset(datasets.ImageFolder):
+class AIHubDataset(datasets.ImageFolder):
     def __init__(self, dir, pairs_path, transform=None):
 
-        super(LFWDataset, self).__init__(dir, transform)
+        super(AIHubDataset, self).__init__(dir, transform)
 
         self.pairs_path = pairs_path
 
-        # LFW dir contains 2 folders: faces and lists
-        self.validation_images = self.get_lfw_paths(dir)
+        # AIHUB dir contains 2 folders: faces and lists
+        self.validation_images = self.get_aihub_paths(dir)
 
-    def read_lfw_pairs(self, pairs_filename):
+    def read_aihub_pairs(self, pairs_filename):
         pairs = []
         with open(pairs_filename, 'r') as f:
             for line in f.readlines()[1:]:
@@ -52,20 +56,20 @@ class LFWDataset(datasets.ImageFolder):
 
         return np.array(pairs, dtype=object)
 
-    def get_lfw_paths(self, lfw_dir):
-        pairs = self.read_lfw_pairs(self.pairs_path)
+    def get_aihub_paths(self, aihub_dir):
+        pairs = self.read_aihub_pairs(self.pairs_path)
 
         nrof_skipped_pairs = 0
         path_list = []
         issame_list = []
         for pair in pairs:
             if len(pair) == 3:
-                path0 = self.add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
-                path1 = self.add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[2])))
+                path0 = self.add_extension(os.path.join(aihub_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
+                path1 = self.add_extension(os.path.join(aihub_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[2])))
                 issame = True
             elif len(pair) == 4:
-                path0 = self.add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
-                path1 = self.add_extension(os.path.join(lfw_dir, pair[2], pair[2] + '_' + '%04d' % int(pair[3])))
+                path0 = self.add_extension(os.path.join(aihub_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
+                path1 = self.add_extension(os.path.join(aihub_dir, pair[2], pair[2] + '_' + '%04d' % int(pair[3])))
                 issame = False
             if os.path.exists(path0) and os.path.exists(path1):  # Only add the pair if both paths exist
                 path_list.append((path0, path1, issame))

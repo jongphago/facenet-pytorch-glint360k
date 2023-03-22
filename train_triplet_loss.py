@@ -10,6 +10,7 @@ from datasets.LFWDataset import LFWDataset
 from losses.triplet_loss import TripletLoss
 from datasets.TripletLossDataset import TripletFaceDataset
 from validate_on_LFW import evaluate_lfw
+from validate_aihub import validate_aihub
 from plot import plot_roc_lfw, plot_accuracy_lfw
 from tqdm import tqdm
 from model.inceptionresnetv2 import InceptionResnetV2Triplet
@@ -29,6 +30,9 @@ parser.add_argument('--dataroot', '-d', type=str, required=True,
                     )
 parser.add_argument('--lfw', type=str, required=True,
                     help="(REQUIRED) Absolute path to the labeled faces in the wild dataset folder"
+                    )
+parser.add_argument('--aihub', type=str, required=True,
+                    help="(REQUIRED) Absolute path to the AIHub face image known family info dataset folder"
                     )
 parser.add_argument('--training_dataset_csv_path', type=str, default='datasets/glint360k.csv',
                     help="Path to the csv file containing the image paths of the training dataset"
@@ -284,6 +288,7 @@ def forward_pass(imgs, model, batch_size):
 def main():
     dataroot = args.dataroot
     lfw_dataroot = args.lfw
+    aihub_dataroot = args.aihub
     training_dataset_csv_path = args.training_dataset_csv_path
     epochs = args.epochs
     iterations_per_epoch = args.iterations_per_epoch
@@ -336,6 +341,17 @@ def main():
         dataset=LFWDataset(
             dir=lfw_dataroot,
             pairs_path='datasets/LFW_pairs.txt',
+            transform=lfw_transforms
+        ),
+        batch_size=lfw_batch_size,
+        num_workers=num_workers,
+        shuffle=False
+    )
+    
+    aihub_dataloader = torch.utils.data.DataLoader(
+        dataset=LFWDataset(
+            dir=aihub_dataroot,
+            pairs_path='data/pairs/valid/pairs_Family.txt',
             transform=lfw_transforms
         ),
         batch_size=lfw_batch_size,
@@ -487,9 +503,12 @@ def main():
             f.writelines(log + '\n')
 
         # Evaluation pass on LFW dataset
-        best_distances = validate_lfw(
+        is_aihub = True
+        validate = validate_aihub if is_aihub else validate_lfw
+        loader = aihub_dataloader if is_aihub else lfw_dataloader
+        best_distances = validate(
             model=model,
-            lfw_dataloader=lfw_dataloader,
+            lfw_dataloader=loader,
             model_architecture=model_architecture,
             epoch=epoch
         )
