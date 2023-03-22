@@ -26,7 +26,7 @@ def plot_roc_lfw(false_positive_rate, true_positive_rate, figure_name="roc.png")
     plt.close()
 
 
-def plot_accuracy_lfw(log_file, epochs, figure_name="lfw_accuracies.png"):
+def plot_accuracy_lfw(log_file, epochs, dataset="LFW", figure_name="lfw_accuracy.png"):
     """Plots the accuracies on the Labeled Faces in the Wild dataset over the training epochs.
 
     Args:
@@ -40,12 +40,12 @@ def plot_accuracy_lfw(log_file, epochs, figure_name="lfw_accuracies.png"):
         accuracy_list = [round(float(line.split('\t')[1]), 2) for line in lines]
 
         fig = plt.figure()
-        plt.plot(epoch_list, accuracy_list, color='red', label='LFW Accuracy')
+        plt.plot(epoch_list, accuracy_list, color='red', label=f'{dataset} Accuracy')
         plt.ylim([0.0, 1.05])
         plt.xlim([0, epochs + 1])
         plt.xlabel('Epoch')
-        plt.ylabel('LFW Accuracy')
-        plt.title('LFW Accuracies plot')
+        plt.ylabel(f'{dataset} Accuracy')
+        plt.title(f'{dataset} Accuracies plot')
         plt.legend(loc='lower right')
         fig.savefig(figure_name, dpi=fig.dpi)
         plt.close()

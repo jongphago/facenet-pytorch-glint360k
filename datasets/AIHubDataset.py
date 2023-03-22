@@ -64,12 +64,12 @@ class AIHubDataset(datasets.ImageFolder):
         issame_list = []
         for pair in pairs:
             if len(pair) == 3:
-                path0 = self.add_extension(os.path.join(aihub_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
-                path1 = self.add_extension(os.path.join(aihub_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[2])))
+                path0 = self.add_extension(os.path.join(aihub_dir, pair[0], pair[1]))
+                path1 = self.add_extension(os.path.join(aihub_dir, pair[0], pair[2]))
                 issame = True
             elif len(pair) == 4:
-                path0 = self.add_extension(os.path.join(aihub_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
-                path1 = self.add_extension(os.path.join(aihub_dir, pair[2], pair[2] + '_' + '%04d' % int(pair[3])))
+                path0 = self.add_extension(os.path.join(aihub_dir, pair[0], pair[1]))
+                path1 = self.add_extension(os.path.join(aihub_dir, pair[2], pair[3]))
                 issame = False
             if os.path.exists(path0) and os.path.exists(path1):  # Only add the pair if both paths exist
                 path_list.append((path0, path1, issame))

@@ -7,6 +7,7 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 from torch.nn.modules.distance import PairwiseDistance
 from datasets.LFWDataset import LFWDataset
+from datasets.AIHubDataset import AIHubDataset
 from losses.triplet_loss import TripletLoss
 from datasets.TripletLossDataset import TripletFaceDataset
 from validate_on_LFW import evaluate_lfw
@@ -263,9 +264,10 @@ def validate_lfw(model, lfw_dataloader, model_architecture, epoch):
         )
         # Plot LFW accuracies plot
         plot_accuracy_lfw(
-            log_file="logs/lfw_{}_log_triplet.txt".format(model_architecture),
+            log_file="logs/aihub_{}_log_triplet.txt".format(model_architecture),
             epochs=epoch,
-            figure_name="plots/accuracies_plots/lfw_accuracies_{}_epoch_{}_triplet.png".format(model_architecture, epoch)
+            dataset="AIHub",
+            figure_name="plots/accuracies_plots/aihub_accuracies_{}_epoch_{}_triplet.png".format(model_architecture, epoch)
         )
     except Exception as e:
         print(e)
@@ -336,6 +338,8 @@ def main():
             std=[0.2457, 0.2175, 0.2129]
         )
     ])
+    
+    aihub_transforms = lfw_transforms
 
     lfw_dataloader = torch.utils.data.DataLoader(
         dataset=LFWDataset(
@@ -349,10 +353,10 @@ def main():
     )
     
     aihub_dataloader = torch.utils.data.DataLoader(
-        dataset=LFWDataset(
+        dataset=AIHubDataset(
             dir=aihub_dataroot,
             pairs_path='data/pairs/valid/pairs_Family.txt',
-            transform=lfw_transforms
+            transform=aihub_transforms
         ),
         batch_size=lfw_batch_size,
         num_workers=num_workers,
@@ -508,7 +512,7 @@ def main():
         loader = aihub_dataloader if is_aihub else lfw_dataloader
         best_distances = validate(
             model=model,
-            lfw_dataloader=loader,
+            aihub_dataloader=loader,
             model_architecture=model_architecture,
             epoch=epoch
         )
