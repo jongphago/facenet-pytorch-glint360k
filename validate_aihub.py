@@ -52,6 +52,26 @@ def validate_aihub(model, aihub_dataloader, model_architecture, epoch):
                     np.mean(far)
                 )
         )
+        print("Accuracy on AIHUB, Precision, Recall,",
+              "ROC Area Under Curve, Best distance threshold",
+              "TAR, FAR")
+        print("{:.4f}+-{:.4f}, {:.4f}+-{:.4f}, {:.4f}+-{:.4f},"
+              "{:.4f}, {:.2f}+-{:.2f},"
+              "{:.4f}+-{:.4f}, {:.4f}".format(
+                    np.mean(accuracy),
+                    np.std(accuracy),
+                    np.mean(precision),
+                    np.std(precision),
+                    np.mean(recall),
+                    np.std(recall),
+                    roc_auc,
+                    np.mean(best_distances),
+                    np.std(best_distances),
+                    np.mean(tar),
+                    np.std(tar),
+                    np.mean(far)
+                )
+        )
         with open('logs/aihub_{}_log_triplet.txt'.format(model_architecture), 'a') as f:
             val_list = [
                 epoch,
