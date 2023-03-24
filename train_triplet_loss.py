@@ -319,14 +319,16 @@ def main():
     #   Normalize(mean=[0.6071, 0.4609, 0.3944], std=[0.2457, 0.2175, 0.2129]) according to the calculated glint360k
     #   dataset with tightly-cropped faces dataset RGB channels' mean and std values by
     #   calculate_glint360k_rgb_mean_std.py in 'datasets' folder.
+    aihub_mean = [0.5444, 0.4335, 0.3800]
+    aihub_std = [0.2672, 0.2295, 0.2156]
     data_transforms = transforms.Compose([
         transforms.Resize(size=(image_size, image_size)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(degrees=5),
         transforms.ToTensor(),
         transforms.Normalize(
-            mean=[0.6071, 0.4609, 0.3944],
-            std=[0.2457, 0.2175, 0.2129]
+            mean=aihub_mean,
+            std=aihub_std
         )
     ])
 
@@ -339,7 +341,14 @@ def main():
         )
     ])
     
-    aihub_transforms = lfw_transforms
+    aihub_transforms = transforms.Compose([
+        transforms.Resize(size=(image_size, image_size)),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            mean=aihub_mean,
+            std=aihub_std
+        )
+    ])
 
     lfw_dataloader = torch.utils.data.DataLoader(
         dataset=LFWDataset(
