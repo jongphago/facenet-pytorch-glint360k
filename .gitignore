@@ -8,3 +8,4 @@ plots/roc_plots/*.png
 model_training_checkpoints/*.pt
 logs/*.txt
 datasets/generated_triplets/*.npy
+wandb
