@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
     
         {
             "name": "Python: Current File",
@@ -48,7 +49,32 @@
                 "--dataroot", "/home/jupyter/data/face-image/train_aihub_family", 
                 "--lfw", "/home/jupyter/data/face-image/lfw_224",  
                 "--aihub", "/home/jupyter/data/face-image/valid_aihub_family",  
-                "--training_dataset_csv_path", "aihub_family.csv",
+                "--training_dataset_csv_path", "aihub_train.csv",
+                "--epochs", "2",
+                "--model_architecture", "resnet34",
+                "--iterations_per_epoch", "10",
+                "--pretrained", "True",
+                "--num_human_identities_per_batch", "32",
+                "--batch_size", "100",
+                "--optimizer", "adagrad",
+                "--learning_rate", "0.075",
+                "--margin", "0.2",
+                "--image_size", "140",
+                "--use_semihard_negatives", "False",
+            ],
+        },
+        {
+            "name": "Python: Sweep | Facenet Finetuning AIHub Validation",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/jongphago/facenet-pytorch-glint360k/sweep_train_triplet_loss.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--dataroot", "/home/jupyter/data/face-image/train_aihub_family", 
+                "--lfw", "/home/jupyter/data/face-image/lfw_224",  
+                "--aihub", "/home/jupyter/data/face-image/valid_aihub_family",  
+                "--training_dataset_csv_path", "aihub_train.csv",
                 "--epochs", "2",
                 "--model_architecture", "resnet34",
                 "--iterations_per_epoch", "10",
