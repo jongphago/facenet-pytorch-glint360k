@@ -105,4 +105,4 @@ def validate_aihub(model, aihub_dataloader, model_architecture, epoch):
     except Exception as e:
         print(e)
 
-    return best_distances
+    return best_distances, (accuracy, precision, recall, roc_auc, tar, far)
