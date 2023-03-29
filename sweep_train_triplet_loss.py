@@ -360,7 +360,7 @@ def forward_pass(imgs, model, batch_size):
 
 def main():
     run = wandb.init()
-    
+
     dataroot = args.dataroot
     lfw_dataroot = args.lfw
     aihub_dataroot = args.aihub
@@ -499,7 +499,6 @@ def main():
         )
     )
 
-
     for epoch in range(start_epoch, epochs):
         total_epoch_loss = 0.0
         num_valid_training_triplets = 0
@@ -582,7 +581,7 @@ def main():
                 negative=neg_valid_embeddings,
             )
             total_epoch_loss += triplet_loss.item()
-            
+
             # Calculating number of triplets that met the triplet selection method during the epoch
             num_valid_training_triplets += len(anc_valid_embeddings)
 
@@ -636,7 +635,7 @@ def main():
                 model_architecture, epoch
             ),
         )
-        
+
         wandb.log(
             {
                 "epoch": epoch,
@@ -654,20 +653,21 @@ def main():
 
 if __name__ == "__main__":
     sweep_configuration = {
-        "method": "random",
+        "method": "bayes",
         "name": "sweep",
         "metric": {"goal": "maximize", "name": "val_acc"},
         "parameters": {
-            "lr": {"values": [0.1, 0.01, 0.001, 0.0001]},
-            "epochs": {"values": [2, 5, 10]},
-            "iterations_per_epoch": {"values": [10, 20, 30]},
-            "margin": {"values": [0.1, 0.2, 0.3, 0.4]},
-            "optimizer": {"values": ["sgd", "adagrad", "rmsprop", "adam"]},
+            "lr": {"distribution": "log_uniform_values", "min": 0.0001, "max": 0.1},
+            "epochs": {"values": [5, 10, 20]},
+            "iterations_per_epoch": {"values": [20, 30, 40]},
+            "margin": {"values": [0.1, 0.2, 0.3]},
+            "optimizer": {"values": ["sgd", "adagrad"]},
             # "pretrained": {"values": [True, False]},
-            "embedding_dimension": {"values": [256, 512, 1024]},
+            "embedding_dimension": {"values": [512, 1024]},
             "use_semihard_negatives": {"values": [True, False]},
             "num_human_identities_per_batch": {"values": [16, 32, 64]},
         },
+        "early_terminate": {"type": "hyperband", "s": 2, "eta": 3, "max_iter": 27},
     }
     sweep_id = wandb.sweep(sweep=sweep_configuration, project="my-second-sweep")
     wandb.agent(sweep_id, main)
