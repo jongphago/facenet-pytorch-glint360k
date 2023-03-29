@@ -366,11 +366,11 @@ def main():
     aihub_dataroot = args.aihub
     training_dataset_csv_path = args.training_dataset_csv_path
     epochs = wandb.config.epochs
-    iterations_per_epoch = args.iterations_per_epoch
+    iterations_per_epoch = wandb.config.iterations_per_epoch
     model_architecture = args.model_architecture
-    pretrained = wandb.config.pretrained
+    pretrained = args.pretrained
     embedding_dimension = wandb.config.embedding_dimension
-    num_human_identities_per_batch = args.num_human_identities_per_batch
+    num_human_identities_per_batch = wandb.config.num_human_identities_per_batch
     batch_size = args.batch_size
     lfw_batch_size = args.lfw_batch_size
     resume_path = args.resume_path
@@ -379,7 +379,7 @@ def main():
     learning_rate = wandb.config.lr
     margin = wandb.config.margin
     image_size = args.image_size
-    use_semihard_negatives = args.use_semihard_negatives
+    use_semihard_negatives = wandb.config.use_semihard_negatives
     training_triplets_path = args.training_triplets_path
     flag_training_triplets_path = False
     start_epoch = 0
@@ -499,9 +499,9 @@ def main():
         )
     )
 
-    total_loss = 0.0
 
     for epoch in range(start_epoch, epochs):
+        total_epoch_loss = 0.0
         num_valid_training_triplets = 0
         l2_distance = PairwiseDistance(p=2)
         _training_triplets_path = None
@@ -581,7 +581,7 @@ def main():
                 positive=pos_valid_embeddings,
                 negative=neg_valid_embeddings,
             )
-            total_loss += triplet_loss.item()
+            total_epoch_loss += triplet_loss.item()
             
             # Calculating number of triplets that met the triplet selection method during the epoch
             num_valid_training_triplets += len(anc_valid_embeddings)
@@ -641,7 +641,7 @@ def main():
             {
                 "epoch": epoch,
                 # "train_acc": train_acc,
-                "train_loss": total_loss,
+                "train_loss": total_epoch_loss,
                 "val_acc": np.mean(accuracy),
                 # "val_loss": val_loss,
                 "precision": np.mean(precision),
@@ -659,11 +659,14 @@ if __name__ == "__main__":
         "metric": {"goal": "maximize", "name": "val_acc"},
         "parameters": {
             "lr": {"values": [0.1, 0.01, 0.001, 0.0001]},
-            "epochs": {"values": [2, 5]},
+            "epochs": {"values": [2, 5, 10]},
+            "iterations_per_epoch": {"values": [10, 20, 30]},
             "margin": {"values": [0.1, 0.2, 0.3, 0.4]},
             "optimizer": {"values": ["sgd", "adagrad", "rmsprop", "adam"]},
-            "pretrained": {"values": [True, False]},
+            # "pretrained": {"values": [True, False]},
             "embedding_dimension": {"values": [256, 512, 1024]},
+            "use_semihard_negatives": {"values": [True, False]},
+            "num_human_identities_per_batch": {"values": [16, 32, 64]},
         },
     }
     sweep_id = wandb.sweep(sweep=sweep_configuration, project="my-second-sweep")
