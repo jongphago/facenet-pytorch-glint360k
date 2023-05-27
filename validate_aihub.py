@@ -2,7 +2,7 @@ from tqdm import tqdm
 import numpy as np
 import torch
 from torch.nn.modules.distance import PairwiseDistance
-from validate_on_LFW import evaluate_lfw
+from facenet.validate_on_LFW import evaluate_lfw
 from plot import plot_roc_lfw, plot_accuracy_lfw
 
 
