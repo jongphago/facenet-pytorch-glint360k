@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from torch.nn.modules.distance import PairwiseDistance
 from facenet.validate_on_LFW import evaluate_lfw
-from plot import plot_roc_lfw, plot_accuracy_lfw
+from facenet.plot import plot_roc_lfw, plot_accuracy_lfw
 
 
 def validate_aihub(model, aihub_dataloader, model_architecture, epoch):
