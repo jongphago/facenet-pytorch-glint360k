@@ -47,7 +47,7 @@ def evaluate_lfw(distances, labels, num_folds=10, far_target=1e-3):
     """
 
     # Calculate ROC metrics
-    thresholds_roc = np.arange(0, 30, 0.01)
+    thresholds_roc = np.arange(0, 100, 0.01)
     true_positive_rate, false_positive_rate, precision, recall, accuracy, best_distances = \
         calculate_roc_values(
             thresholds=thresholds_roc, distances=distances, labels=labels, num_folds=num_folds
@@ -56,7 +56,7 @@ def evaluate_lfw(distances, labels, num_folds=10, far_target=1e-3):
     roc_auc = auc(false_positive_rate, true_positive_rate)
 
     # Calculate validation rate
-    thresholds_val = np.arange(0, 30, 0.01)
+    thresholds_val = np.arange(0, 100, 0.01)
     tar, far = calculate_val(
         thresholds_val=thresholds_val, distances=distances, labels=labels, far_target=far_target, num_folds=num_folds
     )
