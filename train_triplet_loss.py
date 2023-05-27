@@ -6,17 +6,17 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
 from torch.nn.modules.distance import PairwiseDistance
-from datasets.LFWDataset import LFWDataset
-from datasets.AIHubDataset import AIHubDataset
-from losses.triplet_loss import TripletLoss
-from datasets.TripletLossDataset import TripletFaceDataset
-from validate_on_LFW import evaluate_lfw
-from validate_aihub import validate_aihub
-from plot import plot_roc_lfw, plot_accuracy_lfw
+from facenet.datasets.LFWDataset import LFWDataset
+from facenet.datasets.AIHubDataset import AIHubDataset
+from facenet.losses.triplet_loss import TripletLoss
+from facenet.datasets.TripletLossDataset import TripletFaceDataset
+from facenet.validate_on_LFW import evaluate_lfw
+from facenet.validate_aihub import validate_aihub
+from facenet.plot import plot_roc_lfw, plot_accuracy_lfw
 from tqdm import tqdm
-from model.inceptionresnetv2 import InceptionResnetV2Triplet
-from model.mobilenetv2 import MobileNetV2Triplet
-from model.resnet import (
+from facenet.model.inceptionresnetv2 import InceptionResnetV2Triplet
+from facenet.model.mobilenetv2 import MobileNetV2Triplet
+from facenet.model.resnet import (
     Resnet18Triplet,
     Resnet34Triplet,
     Resnet50Triplet,
